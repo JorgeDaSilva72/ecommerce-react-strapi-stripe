@@ -1,69 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Card from "../Card/Card";
 import "./FeaturedProducts.scss";
-import axios from "axios";
+import useFetch from "../../hooks/useFetch";
 
 const FeaturedProducts = ({ type }) => {
-  // const data = [
-  //   {
-  //     id: 1,
-  //     img: "https://images.pexels.com/photos/1549200/pexels-photo-1549200.jpeg?auto=compress&cs=tinysrgb&w=1600",
-  //     img2: "https://images.pexels.com/photos/949670/pexels-photo-949670.jpeg?auto=compress&cs=tinysrgb&w=1600",
-  //     title: "Long T-shirt",
-  //     isNew: true,
-  //     oldPrice: 19,
-  //     price: 12,
-  //   },
-  //   {
-  //     id: 2,
-  //     img: "https://images.pexels.com/photos/1549200/pexels-photo-1549200.jpeg?auto=compress&cs=tinysrgb&w=1600",
-  //     img2: "https://images.pexels.com/photos/949670/pexels-photo-949670.jpeg?auto=compress&cs=tinysrgb&w=1600",
-  //     title: "Long T-shirt",
-  //     isNew: true,
-  //     oldPrice: 19,
-  //     price: 12,
-  //   },
-  //   {
-  //     id: 3,
-  //     img: "https://images.pexels.com/photos/1549200/pexels-photo-1549200.jpeg?auto=compress&cs=tinysrgb&w=1600",
-  //     img2: "https://images.pexels.com/photos/949670/pexels-photo-949670.jpeg?auto=compress&cs=tinysrgb&w=1600",
-  //     title: "Long T-shirt",
-  //     isNew: false,
-  //     oldPrice: 19,
-  //     price: 12,
-  //   },
-  //   {
-  //     id: 4,
-  //     img: "https://images.pexels.com/photos/1549200/pexels-photo-1549200.jpeg?auto=compress&cs=tinysrgb&w=1600",
-  //     img2: "https://images.pexels.com/photos/949670/pexels-photo-949670.jpeg?auto=compress&cs=tinysrgb&w=1600",
-  //     title: "Long T-shirt",
-  //     isNew: false,
-  //     oldPrice: 19,
-  //     price: 12,
-  //   },
-  // ];
-
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await axios.get(
-          process.env.REACT_APP_API_URL +
-            `/products?populate=*&[filters][type][$eq]=${type}`,
-          {
-            headers: {
-              Authorization: "bearer " + process.env.REACT_APP_API_TOKEN,
-            },
-          }
-        );
-        setData(res.data.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
-  }, []);
+  const { data, loading, error } = useFetch(
+    `/products?populate=*&[filters][type][$eq]=${type}`
+  );
 
   return (
     <div className="featuredProducts">
@@ -78,9 +21,11 @@ const FeaturedProducts = ({ type }) => {
         </p>
       </div>
       <div className="bottom">
-        {data?.map((item) => (
-          <Card item={item} key={item.id} />
-        ))}
+        {error
+          ? "Oops , il y a eu un problème !!"
+          : loading
+          ? "En train de charger"
+          : data?.map((item) => <Card item={item} key={item.id} />)}
       </div>
     </div>
   );

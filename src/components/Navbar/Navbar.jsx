@@ -39,9 +39,10 @@ const Navbar = () => {
 
         <div className="center">
           <Link className="link" to="/">
-            STORE
+            THIERRY OLLIVIER
           </Link>
         </div>
+
         <div className="right">
           <div className="item">
             <Link className="link" to="/">
